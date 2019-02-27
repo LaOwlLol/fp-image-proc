@@ -15,8 +15,8 @@ public class App extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("../../../views/App.fxml"));
-        primaryStage.setTitle("Registration Form FXML Application");
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setTitle("Faux Pas Image Processor");
+        primaryStage.setScene(new Scene(root, 1120, 800));
         primaryStage.show();
     }
 

@@ -26,7 +26,8 @@ dependencies {
     implementation 'com.google.guava:guava:27.0.1-jre'
 
     compile 'com.github.LaOwlLol:fp-image:0.1.2'
-
+    compile files(fileTree(dir: 'lib', includes: ['*.jar']))
+    
     // Use JUnit test framework
     testImplementation 'junit:junit:4.12'
 }
