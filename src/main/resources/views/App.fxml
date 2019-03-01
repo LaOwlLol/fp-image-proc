@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.effect.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
 <?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fp.image.proc.AppController">
-   <children>
-      <Button layoutX="471.0" layoutY="361.0" mnemonicParsing="false" text="Execute" />
-   </children>
+<AnchorPane maxHeight="840.0" maxWidth="1120" minHeight="840.0" minWidth="1120" prefHeight="840.0" prefWidth="1120" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fp.image.proc.AppController">
+    <children>
+        <ImageView fx:id="viewport_imgv" fitHeight="720.0" fitWidth="1080.0" layoutX="20.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="80.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="20.0" />
+        <TabPane layoutX="20.0" layoutY="741.0" side="BOTTOM" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+            <tabs>
+                <Tab closable="false" text="Filter">
+
+                </Tab>
+            </tabs>
+        </TabPane>
+    </children>
 </AnchorPane>

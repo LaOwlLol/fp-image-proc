@@ -16,7 +16,7 @@ public class App extends Application {
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getResource("../../../views/App.fxml"));
         primaryStage.setTitle("Registration Form FXML Application");
-        primaryStage.setScene(new Scene(root));
+        primaryStage.setScene(new Scene(root, 1120, 840));
         primaryStage.show();
     }
 
