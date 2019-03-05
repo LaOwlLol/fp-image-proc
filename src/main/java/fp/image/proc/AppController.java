@@ -63,28 +63,51 @@ public class AppController {
         );
         filter_cb.setValue("Translucent");
 
+        filter_major_sldr.setDisable(true);
+        filter_minor_sldr.setDisable(true);
+        filter_major_lbl.setDisable(true);
+        filter_minor_lbl.setDisable(true);
+        filter_major_lbl.setText("disabled");
+        filter_minor_lbl.setText("disabled");
         filter_cb.setOnAction((event) -> {
             String selected = filter_cb.getSelectionModel().getSelectedItem().toString();
 
             if (selected.equals("Canny Edges")) {
                 filter_major_sldr.setDisable(false);
                 filter_minor_sldr.setDisable(false);
+                filter_major_lbl.setDisable(false);
+                filter_minor_lbl.setDisable(false);
+                filter_major_lbl.setText("Lower Threshold");
+                filter_minor_lbl.setText("Upper Threshold");
                 filterTypes.put("Cellular", new CannyFilter(filter_major_sldr.getValue(),
-                        filter_minor_sldr.getValue()));
+                        filter_minor_sldr.getValue()
+                ));
             }
             else if (selected.equals("Sobel Edges")) {
                 filter_major_sldr.setDisable(false);
                 filter_minor_sldr.setDisable(true);
+                filter_major_lbl.setDisable(false);
+                filter_minor_lbl.setDisable(true);
+                filter_major_lbl.setText("Threshold");
+                filter_minor_lbl.setText("disabled");
                 filterTypes.put("Sobel Edges", new SobelFilter(filter_major_sldr.getValue()));
             }
             else if (selected.equals("Gaussian blur")) {
                 filter_major_sldr.setDisable(false);
                 filter_minor_sldr.setDisable(true);
+                filter_major_lbl.setDisable(false);
+                filter_minor_lbl.setDisable(true);
+                filter_major_lbl.setText("Std. Deviation");
+                filter_minor_lbl.setText("disabled");
                 filterTypes.put("Gaussian blur", new GaussianBlur( 3, filter_major_sldr.getValue() ) );
             }
             else if (selected.equals("Translucent")) {
                 filter_major_sldr.setDisable(true);
                 filter_minor_sldr.setDisable(true);
+                filter_major_lbl.setDisable(true);
+                filter_minor_lbl.setDisable(true);
+                filter_major_lbl.setText("disabled");
+                filter_minor_lbl.setText("disabled");
             }
         });
 
@@ -92,7 +115,7 @@ public class AppController {
             String selected = filter_cb.getSelectionModel().getSelectedItem().toString();
 
             if (selected.equals("Canny Edges")) {
-                filterTypes.put("Cellular", new CannyFilter( Double.valueOf(new_val.toString()),
+                filterTypes.put("Cellular", new CannyFilter(Double.valueOf(new_val.toString()),
                         filter_minor_sldr.getValue()));
             }
             else if (selected.equals("Sobel Edges")) {
@@ -108,7 +131,8 @@ public class AppController {
 
             if (selected.equals("Canny Edges")) {
                 filterTypes.put("Cellular", new CannyFilter(filter_major_sldr.getValue(),
-                        Double.valueOf(new_val.toString())));
+                        Double.valueOf(new_val.toString())
+                ));
             }
         });
 
