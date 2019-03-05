@@ -28,6 +28,20 @@
                   </HBox>
                </content>
             </Tab>
+            <Tab closable="false" text="Filter">
+               <content>
+                  <HBox fx:id="filterBar_hbox" alignment="CENTER" spacing="10.0" AnchorPane.bottomAnchor="20.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="20.0">
+                     <children>
+                        <Label fx:id="filter_major_lbl" text="Major" />
+                        <Slider fx:id="filter_major_sldr" blockIncrement="0.001" majorTickUnit="0.25" max="1.0" min="0.001" minorTickCount="4" showTickMarks="true" value="0.015" />
+                        <Label fx:id="filter_minor_lbl" text="Minor" />
+                        <Slider fx:id="filter_minor_sldr" blockIncrement="0.001" majorTickUnit="0.25" max="1.0" min="0.001" minorTickCount="4" showTickMarks="true" value="0.2" />
+                        <ComboBox fx:id="filter_cb" prefWidth="150.0" />
+                        <Button fx:id="filter_execute_btn" mnemonicParsing="false" text="Execute" />
+                     </children>
+                  </HBox>
+               </content>
+            </Tab>
          </tabs>
       </TabPane>
    </children>
