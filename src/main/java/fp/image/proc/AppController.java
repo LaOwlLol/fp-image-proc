@@ -60,11 +60,8 @@ public class AppController {
     @FXML
     public Button filter_execute_btn;
 
-
-
     public AppController() {
         main = new FilterableImage(1080, 720);
-
 
         noiseTypes = new HashMap<>();
         noiseTypes.put("Cellular", new CellularNoise());
@@ -80,85 +77,18 @@ public class AppController {
         filterTypes.put("Sobel Edges", new SobelFilter());
         filterTypes.put("Gaussian blur", new GaussianBlur(3, 1.0));
         filterTypes.put("Translucent", new TranslucentFilter());
-
     }
 
     public void initialize() {
         viewport_imgv.setImage(main.getImage());
         viewport_imgv.setPreserveRatio(true);
 
-        noise_cb.getItems().addAll(
-            "Cellular",
-            "Cubic",
-            "Perlin",
-            "SimplexFractal",
-            "Simplex",
-            "Value",
-            "White"
-        );
-        noise_cb.setValue("Cellular");
+        setupNoiseTab();
+        setupFilterTab();
 
-        //TODO: could be better by not generating new filters on every user input here and on sliders.
-        noise_cb.setOnAction((event) -> {
-            noiseTypes.put("Cellular", new CellularNoise(xFreq_sldr.valueProperty().floatValue(),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("Cubic", new CubicNoise(xFreq_sldr.valueProperty().floatValue(),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("Perlin", new PerlinNoise(xFreq_sldr.valueProperty().floatValue(),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("SimplexFractal", new SimplexFractalNoise(xFreq_sldr.valueProperty().floatValue(),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("Simplex", new SimplexNoise(xFreq_sldr.valueProperty().floatValue(),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("Value", new ValueNoise(xFreq_sldr.valueProperty().floatValue(),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("White", new WhiteNoise());
-        });
+    }
 
-        xFreq_sldr.valueProperty().addListener((ov, old_val, new_val) -> {
-            noiseTypes.put("Cellular", new CellularNoise(Float.valueOf(new_val.toString()),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("Cubic", new CubicNoise(Float.valueOf(new_val.toString()),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("Perlin", new PerlinNoise(Float.valueOf(new_val.toString()),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("SimplexFractal", new SimplexFractalNoise(Float.valueOf(new_val.toString()),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("Simplex", new SimplexNoise(Float.valueOf(new_val.toString()),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("Value", new ValueNoise(Float.valueOf(new_val.toString()),
-                    yFreq_sldr.valueProperty().floatValue()));
-            noiseTypes.put("White", new WhiteNoise());
-        });
-
-        yFreq_sldr.valueProperty().addListener((ov, old_val, new_val) -> {
-            noiseTypes.put("Cellular", new CellularNoise(xFreq_sldr.valueProperty().floatValue(),
-                    Float.valueOf(new_val.toString())));
-            noiseTypes.put("Cubic", new CubicNoise(xFreq_sldr.valueProperty().floatValue(),
-                    Float.valueOf(new_val.toString())));
-            noiseTypes.put("Perlin", new PerlinNoise(xFreq_sldr.valueProperty().floatValue(),
-                    Float.valueOf(new_val.toString())));
-            noiseTypes.put("SimplexFractal", new SimplexFractalNoise(xFreq_sldr.valueProperty().floatValue(),
-                    Float.valueOf(new_val.toString())));
-            noiseTypes.put("Simplex", new SimplexNoise(xFreq_sldr.valueProperty().floatValue(),
-                    Float.valueOf(new_val.toString())));
-            noiseTypes.put("Value", new ValueNoise(xFreq_sldr.valueProperty().floatValue(),
-                    Float.valueOf(new_val.toString())));
-            noiseTypes.put("White", new WhiteNoise());
-        });
-
-        generateNoise_btn.setOnMouseClicked((event) -> {
-            Thread process = new Thread(() -> {
-                noiseBar_hbox.setDisable(true);
-                //lastImage = main.getImage();
-                //last.setDisable(false);
-                main.applyFilter( noiseTypes.get(noise_cb.getSelectionModel().getSelectedItem()) );
-                viewport_imgv.setImage(main.getImage());
-                noiseBar_hbox.setDisable(false);
-            });
-            process.start();
-        });
-
+    private void setupFilterTab() {
         filter_cb.getItems().addAll(
                 "Canny Edges",
                 "Sobel Edges",
@@ -248,6 +178,80 @@ public class AppController {
                 main.applyFilter( filterTypes.get(filter_cb.getSelectionModel().getSelectedItem()) );
                 viewport_imgv.setImage(main.getImage());
                 filterBar_hbox.setDisable(false);
+            });
+            process.start();
+        });
+    }
+
+    private void setupNoiseTab() {
+        noise_cb.getItems().addAll(
+                "Cellular",
+                "Cubic",
+                "Perlin",
+                "SimplexFractal",
+                "Simplex",
+                "Value",
+                "White"
+        );
+        noise_cb.setValue("Cellular");
+
+        //TODO: could be better by not generating new filters on every user input here and on sliders.
+        noise_cb.setOnAction((event) -> {
+            noiseTypes.put("Cellular", new CellularNoise(xFreq_sldr.valueProperty().floatValue(),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("Cubic", new CubicNoise(xFreq_sldr.valueProperty().floatValue(),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("Perlin", new PerlinNoise(xFreq_sldr.valueProperty().floatValue(),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("SimplexFractal", new SimplexFractalNoise(xFreq_sldr.valueProperty().floatValue(),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("Simplex", new SimplexNoise(xFreq_sldr.valueProperty().floatValue(),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("Value", new ValueNoise(xFreq_sldr.valueProperty().floatValue(),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("White", new WhiteNoise());
+        });
+
+        xFreq_sldr.valueProperty().addListener((ov, old_val, new_val) -> {
+            noiseTypes.put("Cellular", new CellularNoise(Float.valueOf(new_val.toString()),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("Cubic", new CubicNoise(Float.valueOf(new_val.toString()),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("Perlin", new PerlinNoise(Float.valueOf(new_val.toString()),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("SimplexFractal", new SimplexFractalNoise(Float.valueOf(new_val.toString()),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("Simplex", new SimplexNoise(Float.valueOf(new_val.toString()),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("Value", new ValueNoise(Float.valueOf(new_val.toString()),
+                    yFreq_sldr.valueProperty().floatValue()));
+            noiseTypes.put("White", new WhiteNoise());
+        });
+
+        yFreq_sldr.valueProperty().addListener((ov, old_val, new_val) -> {
+            noiseTypes.put("Cellular", new CellularNoise(xFreq_sldr.valueProperty().floatValue(),
+                    Float.valueOf(new_val.toString())));
+            noiseTypes.put("Cubic", new CubicNoise(xFreq_sldr.valueProperty().floatValue(),
+                    Float.valueOf(new_val.toString())));
+            noiseTypes.put("Perlin", new PerlinNoise(xFreq_sldr.valueProperty().floatValue(),
+                    Float.valueOf(new_val.toString())));
+            noiseTypes.put("SimplexFractal", new SimplexFractalNoise(xFreq_sldr.valueProperty().floatValue(),
+                    Float.valueOf(new_val.toString())));
+            noiseTypes.put("Simplex", new SimplexNoise(xFreq_sldr.valueProperty().floatValue(),
+                    Float.valueOf(new_val.toString())));
+            noiseTypes.put("Value", new ValueNoise(xFreq_sldr.valueProperty().floatValue(),
+                    Float.valueOf(new_val.toString())));
+            noiseTypes.put("White", new WhiteNoise());
+        });
+
+        generateNoise_btn.setOnMouseClicked((event) -> {
+            Thread process = new Thread(() -> {
+                noiseBar_hbox.setDisable(true);
+                //lastImage = main.getImage();
+                //last.setDisable(false);
+                main.applyFilter( noiseTypes.get(noise_cb.getSelectionModel().getSelectedItem()) );
+                viewport_imgv.setImage(main.getImage());
+                noiseBar_hbox.setDisable(false);
             });
             process.start();
         });
