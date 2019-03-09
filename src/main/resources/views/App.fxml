@@ -47,19 +47,19 @@
                   </Tab>
                </tabs>
             </TabPane>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+            <VBox fx:id="imageControls_vbox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
                <children>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="75.0" text="Undo" VBox.vgrow="NEVER">
+                  <Button fx:id="undo_btn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="20.0" prefWidth="75.0" text="Undo" textAlignment="CENTER" VBox.vgrow="NEVER">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Button>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="75.0" text="Load">
+                  <Button fx:id="load_btn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="20.0" prefWidth="75.0" text="Load" textAlignment="CENTER">
                      <font>
                         <Font size="10.0" />
                      </font>
                   </Button>
-                  <Button maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="18.0" prefWidth="75.0" text="Save">
+                  <Button fx:id="save_btn" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" prefHeight="20.0" prefWidth="75.0" text="Save" textAlignment="CENTER">
                      <font>
                         <Font size="10.0" />
                      </font>

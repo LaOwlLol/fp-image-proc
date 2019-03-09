@@ -3,21 +3,32 @@ package fp.image.proc;
 import fauxpas.entities.FilterableImage;
 import fauxpas.filters.Filter;
 import fauxpas.filters.noise.*;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Slider;
 import fauxpas.filters.*;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.stage.FileChooser;
 
+import javax.imageio.ImageIO;
+import java.io.File;
+import java.io.IOException;
 import java.util.HashMap;
+
+import org.apache.commons.io.FilenameUtils;
 
 
 public class AppController {
 
     public FilterableImage main;
+    public FilterableImage last;
+    public FilterableImage buffer;
     private final HashMap<String, Filter> noiseTypes;
     private final HashMap<String, Filter> filterTypes;
 
@@ -25,7 +36,6 @@ public class AppController {
     public ImageView viewport_imgv;
 
     @FXML
-
     public HBox noiseBar_hbox;
 
     @FXML
@@ -40,6 +50,7 @@ public class AppController {
     @FXML
     public Button generateNoise_btn;
 
+    @FXML
     public HBox filterBar_hbox;
 
     @FXML
@@ -60,8 +71,21 @@ public class AppController {
     @FXML
     public Button filter_execute_btn;
 
+    @FXML
+    public VBox imageControls_vbox;
+
+    @FXML
+    public Button undo_btn;
+
+    @FXML
+    public Button save_btn;
+
+    @FXML
+    public Button load_btn;
+
     public AppController() {
         main = new FilterableImage(1080, 720);
+        last = new FilterableImage(main.getImage());
 
         noiseTypes = new HashMap<>();
         noiseTypes.put("Cellular", new CellularNoise());
@@ -85,7 +109,50 @@ public class AppController {
 
         setupNoiseTab();
         setupFilterTab();
+        setupImageControls();
 
+    }
+
+    private void setupImageControls() {
+        save_btn.setOnMouseClicked((event) -> {
+            imageControls_vbox.setDisable(true);
+            FileChooser fileChooser = new FileChooser();
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG Image","*.png"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("bitmap Image, ","*.bmp"));
+            fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("JPG Image","*.jpg"));
+            File file =  fileChooser.showSaveDialog(save_btn.getScene().getWindow());
+            if (file != null) {
+                writeImageToFile(main.getImage(), file);
+            }
+            else {
+                System.out.println("File selection for save image returned null!");
+            }
+            imageControls_vbox.setDisable(false);
+        });
+
+        load_btn.setOnMouseClicked((event) -> {
+            imageControls_vbox.setDisable(true);
+            last =  new FilterableImage(main.getImage());
+            undo_btn.setDisable(false);
+            FileChooser fileChooser = new FileChooser();
+            File file =  fileChooser.showOpenDialog(load_btn.getScene().getWindow());
+            if (file != null) {
+                main.setImage(new Image(file.toURI().toString()));
+                viewport_imgv.setImage(main.getImage());
+            }
+            imageControls_vbox.setDisable(false);
+        });
+
+        undo_btn.setOnMouseClicked((event -> {
+            Thread process = new Thread(() -> {
+                imageControls_vbox.setDisable(true);
+                main.setImage(last.getImage());
+                viewport_imgv.setImage(last.getImage());
+                undo_btn.setDisable(true);
+                imageControls_vbox.setDisable(false);
+            });
+            process.start();
+        }));
     }
 
     private void setupFilterTab() {
@@ -173,8 +240,8 @@ public class AppController {
         filter_execute_btn.setOnMouseClicked((event) -> {
             Thread process = new Thread(() -> {
                 filterBar_hbox.setDisable(true);
-                //lastImage = main.getImage();
-                //last.setDisable(false);
+                last =  new FilterableImage(main.getImage());
+                undo_btn.setDisable(false);
                 main.applyFilter( filterTypes.get(filter_cb.getSelectionModel().getSelectedItem()) );
                 viewport_imgv.setImage(main.getImage());
                 filterBar_hbox.setDisable(false);
@@ -247,14 +314,24 @@ public class AppController {
         generateNoise_btn.setOnMouseClicked((event) -> {
             Thread process = new Thread(() -> {
                 noiseBar_hbox.setDisable(true);
-                //lastImage = main.getImage();
-                //last.setDisable(false);
+                last =  new FilterableImage(main.getImage());
+                undo_btn.setDisable(false);
                 main.applyFilter( noiseTypes.get(noise_cb.getSelectionModel().getSelectedItem()) );
                 viewport_imgv.setImage(main.getImage());
                 noiseBar_hbox.setDisable(false);
             });
             process.start();
         });
+    }
+
+    private void writeImageToFile(Image img, File file) {
+        String extension = FilenameUtils.getExtension(file.getPath());
+
+        try {
+            ImageIO.write(SwingFXUtils.fromFXImage(img, null), extension, file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }
