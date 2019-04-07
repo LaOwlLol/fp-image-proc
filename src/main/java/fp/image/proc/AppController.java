@@ -100,6 +100,7 @@ public class AppController {
         filterTypes.put("Canny Edges", new CannyFilter());
         filterTypes.put("Sobel Edges", new SobelFilter());
         filterTypes.put("Gaussian blur", new GaussianBlur(3, 1.0));
+        filterTypes.put("Grayscale", new GrayscaleFilter());
         filterTypes.put("Translucent", new TranslucentFilter());
     }
 
@@ -160,6 +161,7 @@ public class AppController {
                 "Canny Edges",
                 "Sobel Edges",
                 "Gaussian blur",
+                "Grayscale",
                 "Translucent"
         );
         filter_cb.setValue("Translucent");
@@ -201,6 +203,14 @@ public class AppController {
                 filter_major_lbl.setText("Std. Deviation");
                 filter_minor_lbl.setText("disabled");
                 filterTypes.put("Gaussian blur", new GaussianBlur( 3, filter_major_sldr.getValue() ) );
+            }
+            else if (selected.equals("Grayscale")) {
+                filter_major_sldr.setDisable(true);
+                filter_minor_sldr.setDisable(true);
+                filter_major_lbl.setDisable(true);
+                filter_minor_lbl.setDisable(true);
+                filter_major_lbl.setText("disabled");
+                filter_minor_lbl.setText("disabled");
             }
             else if (selected.equals("Translucent")) {
                 filter_major_sldr.setDisable(true);
