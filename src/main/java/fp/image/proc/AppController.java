@@ -88,6 +88,9 @@ public class AppController {
     public Button load_btn;
 
     @FXML
+    public HBox mixerBar_hbox;
+
+    @FXML
     public ComboBox mix_f1_cb;
 
     @FXML
@@ -136,11 +139,65 @@ public class AppController {
 
         mix_f1_cb.getItems().addAll( "Main", "Cache", "Last" );
         mix_f1_cb.getItems().addAll(noiseTypes.keySet());
+        mix_f1_cb.setValue("Main");
 
         mix_f2_cb.getItems().addAll( "Main", "Cache", "Last" );
         mix_f2_cb.getItems().addAll(noiseTypes.keySet());
+        mix_f2_cb.setValue("Cache");
 
         mix_type_cb.getItems().addAll( "Sum", "Blend", "Reflection" );
+        mix_type_cb.setValue("Blend");
+
+        mix_btn.setOnMouseClicked((event -> {
+            Thread process = new Thread(() -> {
+                mixerBar_hbox.setDisable(true);
+
+                Filter f1;
+                Filter f2;
+
+                if (mix_f1_cb.getSelectionModel().getSelectedItem().toString().equals("Main")) {
+                    f1 = (image) -> main.getImage();
+                }
+                else if (mix_f1_cb.getSelectionModel().getSelectedItem().toString().equals("Cache")) {
+                    f1 = (image) -> buffer.getImage();
+                }
+                else if (mix_f1_cb.getSelectionModel().getSelectedItem().toString().equals("Last")) {
+                    f1 = (image) -> last.getImage();
+                }
+                else {
+                    f1 = noiseTypes.get(mix_f1_cb.getSelectionModel().getSelectedItem().toString());
+                }
+
+                if (mix_f2_cb.getSelectionModel().getSelectedItem().toString().equals("Main")) {
+                    f2 = (image) -> main.getImage();
+                }
+                else if (mix_f2_cb.getSelectionModel().getSelectedItem().toString().equals("Cache")) {
+                    f2 = (image) -> buffer.getImage();
+                }
+                else if (mix_f2_cb.getSelectionModel().getSelectedItem().toString().equals("Last")) {
+                    f2 = (image) -> last.getImage();
+                }
+                else {
+                    f2 = noiseTypes.get(mix_f2_cb.getSelectionModel().getSelectedItem().toString());
+                }
+
+                if ( mix_type_cb.getSelectionModel().getSelectedItem().toString().equals("Sum") ) {
+                    main.applyFilter( new SumFilter(0.5, 0.5).apply(f1, f2) );
+                    viewport_imgv.setImage(main.getImage());
+                }
+                else if ( mix_type_cb.getSelectionModel().getSelectedItem().toString().equals("Blend") ) {
+                    main.applyFilter( new BlendFilter().apply(f1, f2) );
+                    viewport_imgv.setImage(main.getImage());
+                }
+                else if ( mix_type_cb.getSelectionModel().getSelectedItem().toString().equals("Reflection") ) {
+                    main.applyFilter( new ReflectionFilter().apply(f1, f2) );
+                    viewport_imgv.setImage(main.getImage());
+                }
+
+                mixerBar_hbox.setDisable(false);
+            });
+            process.start();
+        }));
 
     }
 
@@ -188,7 +245,7 @@ public class AppController {
         cache_btn.setOnMouseClicked((event) -> {
             Thread process = new Thread(() -> {
                 imageControls_vbox.setDisable(true);
-                buffer.setImage(last.getImage());
+                buffer.setImage(main.getImage());
                 imageControls_vbox.setDisable(false);
             });
             process.start();
