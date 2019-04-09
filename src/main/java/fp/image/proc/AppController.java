@@ -1,6 +1,7 @@
 package fp.image.proc;
 
 import fauxpas.entities.FilterableImage;
+import fauxpas.fastnoise.FastNoise;
 import fauxpas.filters.Filter;
 import fauxpas.filters.noise.*;
 import javafx.embed.swing.SwingFXUtils;
@@ -75,6 +76,9 @@ public class AppController {
     public VBox imageControls_vbox;
 
     @FXML
+    public Button cache_btn;
+
+    @FXML
     public Button undo_btn;
 
     @FXML
@@ -83,9 +87,23 @@ public class AppController {
     @FXML
     public Button load_btn;
 
+    @FXML
+    public ComboBox mix_f1_cb;
+
+    @FXML
+    public ComboBox mix_f2_cb;
+
+    @FXML
+    public ComboBox mix_type_cb;
+
+    @FXML
+    public Button mix_btn;
+
+
     public AppController() {
         main = new FilterableImage(1080, 720);
         last = new FilterableImage(main.getImage());
+        buffer = new FilterableImage(1080, 720);
 
         noiseTypes = new HashMap<>();
         noiseTypes.put("Cellular", new CellularNoise());
@@ -110,7 +128,19 @@ public class AppController {
 
         setupNoiseTab();
         setupFilterTab();
+        setupMixerTab();
         setupImageControls();
+    }
+
+    private void setupMixerTab() {
+
+        mix_f1_cb.getItems().addAll( "Main", "Cache", "Last" );
+        mix_f1_cb.getItems().addAll(noiseTypes.keySet());
+
+        mix_f2_cb.getItems().addAll( "Main", "Cache", "Last" );
+        mix_f2_cb.getItems().addAll(noiseTypes.keySet());
+
+        mix_type_cb.getItems().addAll( "Sum", "Blend", "Reflection" );
 
     }
 
@@ -154,6 +184,15 @@ public class AppController {
             });
             process.start();
         }));
+
+        cache_btn.setOnMouseClicked((event) -> {
+            Thread process = new Thread(() -> {
+                imageControls_vbox.setDisable(true);
+                buffer.setImage(last.getImage());
+                imageControls_vbox.setDisable(false);
+            });
+            process.start();
+        });
     }
 
     private void setupFilterTab() {
@@ -161,6 +200,7 @@ public class AppController {
                 "Canny Edges",
                 "Sobel Edges",
                 "Gaussian blur",
+                "Smooth",
                 "Grayscale",
                 "Translucent"
         );
@@ -204,6 +244,15 @@ public class AppController {
                 filter_minor_lbl.setText("disabled");
                 filterTypes.put("Gaussian blur", new GaussianBlur( 3, filter_major_sldr.getValue() ) );
             }
+            else if (selected.equals("Smooth")) {
+                filter_major_sldr.setDisable(false);
+                filter_minor_sldr.setDisable(true);
+                filter_major_lbl.setDisable(false);
+                filter_minor_lbl.setDisable(true);
+                filter_major_lbl.setText("Power");
+                filter_minor_lbl.setText("disabled");
+                filterTypes.put("Smooth", new RedistributionFilter( filter_major_sldr.getValue() * 5.0 ) );
+            }
             else if (selected.equals("Grayscale")) {
                 filter_major_sldr.setDisable(true);
                 filter_minor_sldr.setDisable(true);
@@ -234,6 +283,9 @@ public class AppController {
             }
             else if (selected.equals("Gaussian blur")) {
                 filterTypes.put("Gaussian blur", new GaussianBlur( 3, Double.valueOf(new_val.toString()) ) );
+            }
+            else if (selected.equals("Smooth")) {
+                filterTypes.put("Smooth", new RedistributionFilter( filter_major_sldr.getValue() * 5.0 ) );
             }
         });
 
