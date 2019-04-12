@@ -15,3 +15,4 @@ gradle-app.setting
 
 #ignore idea IDE folder.
 .idea
+*.iml
