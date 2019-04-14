@@ -150,6 +150,7 @@ public class AppController {
 
         mix_btn.setOnMouseClicked((event -> {
             Thread process = new Thread(() -> {
+                last =  new FilterableImage(main.getImage());
                 mixerBar_hbox.setDisable(true);
 
                 Filter f1;
